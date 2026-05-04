@@ -430,10 +430,6 @@ def main():
     
     input_file = sys.argv[1]
     
-    print("=" * 70)
-    print("RISC-V Instruction Mix Analyzer")
-    print("=" * 70)
-    print(f"\nLoading instructions from: {input_file}")
     
     # Load instructions
     instructions = load_instructions_from_file(input_file)
@@ -442,10 +438,7 @@ def main():
         print("Error: No valid instructions found in file!")
         sys.exit(1)
     
-    print(f"Loaded {len(instructions)} instructions")
-    
     # Analyze instruction mix
-    print("\nAnalyzing instruction mix...")
     stats = analyze_instruction_mix(instructions)
     
     # Generate reports
