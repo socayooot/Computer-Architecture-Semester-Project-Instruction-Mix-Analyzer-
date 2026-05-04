@@ -8,16 +8,12 @@ MASK32 = 0xFFFFFFFF
 # Utility Functions
 # ============================================================
 def get_bits(x, hi, lo):
-    """Extract bits [hi:lo] inclusive from x."""
-    #This function will extract the bits from position lo to hi (inclusive) from the integer x and return the result as an integer. The bits are numbered from 0 (least significant bit) to 31 (most significant bit).
+    #This function will extract the bits from position lo to hi (inclusive) from the integer x and return the result as an integer. 
+    #The bits are numbered from 0 (least significant bit) to 31 (most significant bit).
     width = hi - lo + 1
     return (x >> lo) & ((1 << width) - 1)
 
 def decode_instruction(instr):
-    """
-    Decode a 32-bit RISC-V instruction.
-    Returns dict with opcode, funct3, funct7, and instruction type.
-    """
     #take in some insturction and returns it in risc-v format
     #the order matters alot!
     d = {}
@@ -31,8 +27,6 @@ def decode_instruction(instr):
     return d
 
 def get_mnemonic(d):
-    """Get instruction mnemonic from decoded instruction."""
-    
     #The input is d from the decode instruction function or some instruction
     #This code is going to return the mnemonic of the instruction based on the opcode, funct3, and funct7 fields. 
     #it decodes the opcode, funct 3 and 7 and goes through a list of tests to determine the instruction type
@@ -156,17 +150,13 @@ def get_mnemonic(d):
     return "unknown"
 
 def categorize_instruction(mnemonic):
-    """
-    Categorize instruction into one of:
-    - ALU: Arithmetic/Logic operations
-    - Memory: Loads and stores
-    - Branch: Conditional branches
-    - Control: Unconditional jumps and system calls
-    - Other: Unknown or special instructions
-    """
+    #categorize instruction based on mnemonic. 
+    #This function takes the mnemonic of an instruction and categorizes it into one of several categories: ALU, Memory, Branch, Control, or Other.
+    
     # ==========================================================================
     # ======================== instruction sets ================================
     # ==========================================================================
+    
     alu_instructions = {
         'add', 'sub', 'addi', 'and', 'or', 'xor', 'andi', 'ori', 'xori',
         'sll', 'srl', 'sra', 'slli', 'srli', 'srai',
@@ -211,12 +201,9 @@ def categorize_instruction(mnemonic):
 # ============================================================
 
 def analyze_instruction_mix(instructions):
-    """
-    Analyze instruction mix and return statistics.
+    #This function takes a list of instructions (in their raw 32-bit integer form) 
+    #analyzes the instruction mix by categorizing each instruction and counting the occurrences of each category and mnemonic.
     
-    Returns:
-        dict with category counts and percentages
-    """
     stats = {
         "ALU": 0,
         "Memory": 0,
@@ -243,7 +230,7 @@ def analyze_instruction_mix(instructions):
         mnemonic_counts[mnem] += 1
         category_details[category].append(mnem)
     
-    # Calculate percentages
+    # Calculate percentages using categories after for loop
     percentages = {}
     for cat in stats:
         if total > 0:
@@ -259,22 +246,22 @@ def analyze_instruction_mix(instructions):
     }
 
 def generate_detailed_report(stats):
-    """Generate a detailed text report."""
+    #create the report
     lines = []
     
     lines.append("=" * 70)
-    lines.append("RISC-V INSTRUCTION MIX ANALYSIS REPORT")
+    lines.append("Instruction Analysis".center(70))
     lines.append("=" * 70)
     lines.append("")
     
-    # Summary statistics
-    lines.append("SUMMARY STATISTICS")
+    #summary
+    lines.append("SUMMARY STATISTICS".center(70))
     lines.append("-" * 70)
-    lines.append(f"Total instructions analyzed: {stats['total']}")
+    lines.append(f"Total instructions: {stats['total']}")
     lines.append("")
     
-    # Instruction mix by category
-    lines.append("INSTRUCTION MIX BY CATEGORY")
+    #category mix
+    lines.append("Categorized Instruction Mix".center(70))
     lines.append("-" * 70)
     lines.append(f"{'Category':<20} {'Count':<10} {'Percentage':<10}")
     lines.append("-" * 70)
@@ -288,7 +275,7 @@ def generate_detailed_report(stats):
     lines.append("")
     
     # Top instructions
-    lines.append("TOP 10 MOST FREQUENT INSTRUCTIONS")
+    lines.append("Top 10 most frequent instructions".center(70))
     lines.append("-" * 70)
     lines.append(f"{'Instruction':<15} {'Count':<10} {'Percentage':<10}")
     lines.append("-" * 70)
@@ -302,42 +289,6 @@ def generate_detailed_report(stats):
     
     lines.append("-" * 70)
     lines.append("")
-    
-    # Workload characterization
-    lines.append("WORKLOAD CHARACTERIZATION")
-    lines.append("-" * 70)
-    
-    alu_pct = stats["percentages"]["ALU"]
-    mem_pct = stats["percentages"]["Memory"]
-    branch_pct = stats["percentages"]["Branch"]
-    
-    if alu_pct > 50:
-        workload_type = "Compute-intensive"
-    elif mem_pct > 40:
-        workload_type = "Memory-intensive"
-    elif branch_pct > 25:
-        workload_type = "Control-intensive"
-    else:
-        workload_type = "Balanced"
-    
-    lines.append(f"Workload Type: {workload_type}")
-    lines.append("")
-    
-    if alu_pct > 50:
-        lines.append("Analysis: High proportion of ALU operations suggests")
-        lines.append("computational workload (e.g., numerical processing, algorithms).")
-    elif mem_pct > 40:
-        lines.append("Analysis: High proportion of memory operations suggests")
-        lines.append("data-intensive workload (e.g., data processing, searching).")
-    elif branch_pct > 25:
-        lines.append("Analysis: High proportion of branches suggests")
-        lines.append("control-intensive workload (e.g., decision trees, conditionals).")
-    else:
-        lines.append("Analysis: Balanced mix of instruction types suggests")
-        lines.append("general-purpose workload.")
-    
-    lines.append("")
-    lines.append("=" * 70)
     
     return "\n".join(lines)
 
