@@ -255,14 +255,18 @@ def generate_detailed_report(stats):
     lines.append("")
     
     #summary
+    lines.append("-" * 70)
     lines.append("SUMMARY STATISTICS".center(70))
     lines.append("-" * 70)
+    lines.append("")
     lines.append(f"Total instructions: {stats['total']}")
     lines.append("")
     
     #category mix
+    lines.append("-" * 70)
     lines.append("Categorized Instruction Mix".center(70))
     lines.append("-" * 70)
+    lines.append("")
     lines.append(f"{'Category':<20} {'Count':<10} {'Percentage':<10}")
     lines.append("-" * 70)
     
@@ -275,8 +279,10 @@ def generate_detailed_report(stats):
     lines.append("")
     
     # Top instructions
+    lines.append("-" * 70)
     lines.append("Top 10 most frequent instructions".center(70))
     lines.append("-" * 70)
+    lines.append("")
     lines.append(f"{'Instruction':<15} {'Count':<10} {'Percentage':<10}")
     lines.append("-" * 70)
     
@@ -297,9 +303,11 @@ def generate_bar_chart(stats, width=50):
     lines = []
     
     lines.append("")
-    lines.append("INSTRUCTION MIX VISUALIZATION")
     lines.append("-" * 70)
-    
+    lines.append("INSTRUCTION MIX VISUALIZATION".center(70))
+    lines.append("-" * 70)
+    lines.append("")
+
     max_pct = max(stats["percentages"].values()) if stats["percentages"] else 1
     
     for cat in ["ALU", "Memory", "Branch", "Control", "Other"]:
